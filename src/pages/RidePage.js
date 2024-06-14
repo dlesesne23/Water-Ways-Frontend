@@ -1,5 +1,5 @@
-import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { TouchableOpacity } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import NavCard from "../components/NavCard";
@@ -7,10 +7,22 @@ import { createStackNavigator } from "@react-navigation/stack";
 import RideOptions from "../components/RideOptions";
 import MapComponent from "../components/MapComponent";
 import { useNavigation } from "@react-navigation/native";
+import { View, StyleSheet, Button, Text, ActivityIndicator, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logout } from '../components/AuthActions';
+import MapView, { Marker } from 'react-native-maps';
+import { requestRide } from '../components/Services';
+import { APP_NAME } from '@env'
 
 const RidePage = () => {
   const Stack = createStackNavigator();
   const navigation = useNavigation();
+
+const handleLogout = async () => {
+    await AsyncStorage.removeItem('token');
+    dispatch(logout());
+    navigation.navigate('LoginPage');
+  };
 
   return (
     <View>
@@ -22,6 +34,10 @@ const RidePage = () => {
       >
         <Icon name="menu" />
       </TouchableOpacity>
+
+      <View style={styles.container}>
+      <Button title="Logout" onPress={handleLogout} />
+    </View>
 
       <View style={tw`h-1/2`}>
         <MapComponent />
@@ -47,5 +63,13 @@ const RidePage = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default RidePage;

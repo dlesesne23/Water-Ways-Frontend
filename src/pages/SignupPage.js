@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, Image, TextInput, StyleSheet, Button, Alert } from 'react-native';
 import React from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { APP_NAME } from '@env'
 
 
 const SignupPage = ({ navigation }) => {
@@ -17,7 +18,7 @@ const SignupPage = ({ navigation }) => {
     const handleSignup = async () => {
   
       try {
-        const response = await axios.post('http://localhost:3000/user/signup', {
+        const response = await axios.post(`${APP_NAME}/user/signup`, {
           email,
           username,
           password,
@@ -60,9 +61,7 @@ const SignupPage = ({ navigation }) => {
       secureTextEntry
       autoCapitalize="none"
     />
-    <TouchableOpacity onPress={e =>handleSignup()} >
-        <Text className="text-xl text-white font-bold text-center">Signup</Text>
-    </TouchableOpacity>
+    <Button title="Sign Up" onPress={handleSignup} />
   </View>
   )
 }

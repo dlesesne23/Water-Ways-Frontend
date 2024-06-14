@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image, Button } from "react-native";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import tw from "tailwind-react-native-classnames";
 import NavFavorites from "../components/NavFavorites";
@@ -9,10 +9,18 @@ import { setDestination, setOrigin } from "../slices/navSlice";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import NavOptions from "../components/NavOptions";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logout } from '../components/AuthActions';
 
 const HomePage = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('token');
+    dispatch(logout());
+    navigation.navigate('LoginPage'); // or any other screen you want to navigate to
+  };
 
   return (
     <SafeAreaView style={tw`bg-white h-full`}>
@@ -24,6 +32,12 @@ const HomePage = () => {
       >
         <Icon name="menu" />
       </TouchableOpacity>
+
+      <View style={styles.container}>
+        <Button title="Logout" onPress={handleLogout} />
+      </View>
+
+
       <View style={tw`p-5`}>
         <Image
           style={{ width: 100, height: 100, resizeMode: "contain" }}
@@ -68,5 +82,13 @@ const HomePage = () => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default HomePage;

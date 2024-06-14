@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, Image, StyleSheet, Button, TextInput, Alert } from 'react-native';
 import React from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { APP_NAME } from '@env'
 
 const LoginPage = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -13,7 +14,7 @@ const LoginPage = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost/user/login', {
+      const response = await axios.post(`${APP_NAME}/user/signin`, {
         username,
         password,
       });
@@ -47,9 +48,11 @@ const LoginPage = ({ navigation }) => {
       secureTextEntry
       autoCapitalize="none"
     />
-    <TouchableOpacity onPress={e =>handleLogin()} >
-        <TextInput style={styles.input} Login />
-    </TouchableOpacity>
+    <Button title="Login" onPress={handleLogin} />
+    <Text>Don't have an account?</Text>
+    <TouchableOpacity onPress={e =>navigation.navigate('SignupPage')} >
+        <Text className="text-xl text-white font-bold text-center">Signup</Text>
+      </TouchableOpacity>
   </View>
 );
 };
